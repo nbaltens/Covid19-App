@@ -1,0 +1,13 @@
+.boxContainer {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+}
+.box {
+  margin: 20px;
+  border-radius: 10px;
+  background-color: gray;
+  padding: 15px;
+  height: 200px;
+  width: 200px;
+}
