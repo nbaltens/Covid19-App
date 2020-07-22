@@ -1,13 +1,109 @@
+/* Global */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  color: aliceblue;
+}
+
+/* NAVBAR */
+
+.navbar {
+  color: #646582;
+  background-color: aliceblue;
+  width: 100%;
+  padding:5px 10px;
+}
+
+.navIcon {
+  font-size: 45px;
+}
+
+.navTitle {
+  position: relative;
+  bottom: 14px;
+  left: 5px;
+}
+
+/* CHART DATA */
+.chartDataContainerWhole {
+  background-color: #A4B3D3;
+  padding-bottom: 100px;
+}
+.locationTitle {
+  border-bottom: solid 1px #646582;
+  display: inline-block;
+  margin: 10px 20px; 
+}
+
+.chartDataContainer {
+  display: flex;
+  justify-content: space-between;
+  margin-top:100px;
+}
+.dataSelector {
+  text-align: center;
+  margin: 10px 0;
+}
+
+.dataSelector select {
+  background: transparent;
+  border: none;
+  border-bottom: aliceblue solid 1px;
+  color: aliceblue;
+  font-size: 17px;
+  text-align: center;
+  width: 170px;
+}
+
+/* DOUGHNUT CHART DATA */
+.chartContainer {
+  height: 500px;
+  width: 800px;
+  text-align: center;
+  border-left: solid aliceblue 1px;
+  padding-left: 20px;
+  width: 100%;
+}
+
+/* BOX DATA */
+
 .boxContainer {
   display: flex;
   justify-content: center;
   text-align: center;
+  width: 100%;
 }
 .box {
   margin: 20px;
   border-radius: 10px;
-  background-color: gray;
-  padding: 15px;
+  background-color: #FF6384;
+  padding: 30px 1px;
   height: 200px;
   width: 200px;
+}
+.recoveredBox {
+  background-color: #63ffb6;
+}
+.confirmedBox {
+  background-color: #6ba9ff;
+}
+
+.boxChartTitle{
+  font-size: 22px;
+  margin-bottom: 10px;
+  margin-top:3px;
+}
+.boxDataNumber {
+  font-size: 33px;
+}
+
+/* LIST DATA */
+
+.listDataContainer {
+  background-color: #DFE7F2;
+  height: 40vh;
 }
