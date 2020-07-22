@@ -1,152 +1,166 @@
-// import React, { Component } from 'react';
-// import axios from 'axios';
-// import CountUp from 'react-countup';
-
-
-// export default class App extends Component {
-
-//   state = {
-//     confirmed: 0,
-//     recovered: 0,
-//     deaths: 0,
-//     countries: []
-//   }
-
-  
-//   componentDidMount() {
-//     axios.get('https://api.covid19api.com/summary')
-//     .then(response => {
-//       const countries = response.data.Countries.slug;
-//       console.log(countries)
-      
-      
-
-//       this.setState({
-//         confirmed: response.data.Global.TotalConfirmed,
-//         recovered: response.data.Global.TotalRecovered,
-//         deaths: response.data.Global.TotalDeaths,
-//         countries
-//       })
-//     })
-//     .catch(error => {
-//       console.log(error);
-//     });
-//   }
-
-// //   selectCountry() {
-// //     return this.state.countries.map( (country, i) => {
-// //         return <option key={i}>{country}</option>
-// //     })
-// //   }
-
-//   render() {
-//     return (
-//       <div>
-//           <h1>Corona Update</h1>
-
-//           <select>
-//              <option>Helo</option>
-//               {/* {this.selectCountry()} */}
-//           </select>
-
-//           <div>
-//     confirmed: 
-//     <CountUp start={0} end={this.state.confirmed} duration={4} separator="," />
-//           </div>
-
-//           <div>
-//    recovered:
-//    <CountUp start={0} end={this.state.recovered} duration={4} separator="," />
-
-//           </div>
-
-//           <div>
-//     deaths:
-//     <CountUp start={0} end={this.state.deaths} duration={4} separator="," />
-
-//           </div>
-
-//       </div>
-//     )
-//   }
-// }
-
-
 import React from 'react';
 import axios from 'axios';
 import CountUp from 'react-countup';
-import styles from '../App.css'
+import { Doughnut } from 'react-chartjs-2';
+
+
 
 
 export default class Chartdata extends React.Component {
+    constructor(props) {
+        super(props)
+        //Binds countryInput to class
+        this.countryInput = this.countryInput.bind(this);
+    }
+    // Create State
     state = {
         confirmed: 0,
         recovered: 0,
         deaths: 0,
-        countries: []
+        newConfirmed: 0,
+        newDeaths: 0,
+        newRecovered: 0,
+        countries: [],
+        date: 0,
+        country: ""
     }
 
+    // Get data onload
     componentDidMount() {
         this.getData();
     }
 
+    // Get data from api and set as state
     async getData() {
         const info = await axios.get("https://api.covid19api.com/summary");
         const countries = info.data.Countries
-        console.log(countries)
+        const global = info.data.Global
         this.setState( {
-            confirmed: info.data.Global.TotalConfirmed,
-            recovered: info.data.Global.TotalRecovered,
-            deaths: info.data.Global.TotalDeaths,
+            confirmed: global.TotalConfirmed,
+            recovered: global.TotalRecovered,
+            deaths: global.TotalDeaths,
+            newConfirmed: global.NewConfirmed,
+            newRecovered: global.NewRecovered,
+            newDeaths: global.NewDeaths,
+            date: '22-07-2020',
+            country: "Global",
             countries
         });
     }
 
+    // Push country names to selector
     countrySelector() {
         return this.state.countries.map( (country, i) => {
             return <option key={i}>{country.Country}</option>
         });
     }
 
+    // Switch chart data depending on which country is selected
     async countryInput(e) {
-        // const info = await axios.get("https://api.covid19api.com/summary");
-        // let hello = info.data.Countries
-        // let maxSize = hello.map(item => item.Country)
-        // console.log(maxSize)
-        console.log(e.target.value)
+        if(e.target.value === "Global") {
+            this.getData();
+            return;
+            }
+            let selectInput = e.target.value;
+            const info = await axios.get("https://api.covid19api.com/summary");
+            const data= info.data.Countries;
+            let countries = data.filter( data => data.Country === selectInput);
+            let country = countries[0];
+            this.setState( {
+                confirmed: country.TotalConfirmed,
+                recovered: country.TotalRecovered,
+                deaths: country.TotalDeaths,
+                newConfirmed: country.NewConfirmed,
+                newRecovered: country.NewRecovered,
+                newDeaths: country.NewDeaths,
+                date: country.Date,
+                country: country.Country
+            });
+            this.getDate();     
+        }
 
-        // console.log(e.target.value)
-        
-        
+    // Set data for doughnut graph
+    getGraphData() {
+        let newConfirmed = this.state.newConfirmed;
+        let newRecovered = this.state.newRecovered;
+        let newDeaths = this.state.newDeaths
+        const data = {
+            labels: [
+                'Confirmed Cases: ' + newConfirmed,
+                'Recovered Cases: ' + newRecovered,
+                'Death Cases: ' + newDeaths
+            ],
+            datasets: [{
+                data: [newConfirmed, newRecovered, newDeaths],
+                backgroundColor: [
+                '#6ba9ff',
+                '#63ffb6',
+                '#FF6384'
+                ],
+            }]
+        };
+        return data;
+    }
 
+    // Create cleaner date for new cases
+    getDate() {
+        let date = this.state.date;
+        if( date === undefined) {
+            return
+        } else {
+            let dateData = String(date)
+            if(dateData.length > 10 ) {
+            dateData = dateData.substring(0,10);   
+            dateData = dateData.split("-").reverse().join("-");
+        }
+            return dateData;  
+        }
+             
     }
 
     render() {
         return(
-            <div>
+// Selector
+            <div className="chartDataContainerWhole">
+            <h1 className="locationTitle">{this.state.country}</h1>
+            <div className="dataSelector">
                 <select onChange={this.countryInput}>
+                    <option>Global</option>
                     {this.countrySelector()}
                 </select>
-            <div className="boxContainer">
-                
-                <div className="box">
-                    <h4>Confirmed</h4>
-                    <CountUp start={0} end={this.state.confirmed} duration={4} separator="," />
+            </div>
 
+{/* Chart Box Container */}
+
+            <div className="chartDataContainer">
+                <div className="boxContainer">
+                    <div className="box confirmedBox">
+                        <h2>Total</h2>
+                        <h4 className="boxChartTitle">Confirmed Cases</h4>
+                        <CountUp className="boxDataNumber" start={0} end={this.state.confirmed} duration={2} separator="," />
+                    </div>
+
+                    <div className="box recoveredBox">
+                        <h2>Total</h2>
+                        <h4 className="boxChartTitle">Recovered Cases</h4>
+                        <CountUp className="boxDataNumber" start={0} end={this.state.recovered} duration={2} separator="," />
+                    </div>
+
+                    <div className="box">
+                        <h2>Total</h2>
+                        <h4 className="boxChartTitle deathBox">Death Cases</h4>
+                        <CountUp className="boxDataNumber" start={0} end={this.state.deaths} duration={2} separator="," />
+                    </div>
                 </div>
 
-                <div className="box">
-                <h4>Recovered</h4>
-                <CountUp start={0} end={this.state.recovered} duration={4} separator="," />
-                </div>
+{/* Doughnut Chart Container */}
 
-                <div className="box">
-                    <h4>Deaths</h4>
-                    <CountUp start={0} end={this.state.deaths} duration={4} separator="," />
-
+                <div className="chartContainer">
+                    <h2>New Covid Cases From {this.getDate()}</h2>
+                    <Doughnut data={this.getGraphData()} />
                 </div>
             </div>
-            </div>
+        </div>
         )
     }
 }
