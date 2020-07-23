@@ -2,8 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import CountUp from 'react-countup';
 import { Doughnut } from 'react-chartjs-2';
-
-
+import Listdata from './Listcontainer';
 
 
 export default class Chartdata extends React.Component {
@@ -21,7 +20,7 @@ export default class Chartdata extends React.Component {
         newDeaths: 0,
         newRecovered: 0,
         countries: [],
-        date: 0,
+        date: null,
         country: ""
     }
 
@@ -42,7 +41,7 @@ export default class Chartdata extends React.Component {
             newConfirmed: global.NewConfirmed,
             newRecovered: global.NewRecovered,
             newDeaths: global.NewDeaths,
-            date: '22-07-2020',
+            date: null,
             country: "Global",
             countries
         });
@@ -50,8 +49,8 @@ export default class Chartdata extends React.Component {
 
     // Push country names to selector
     countrySelector() {
-        return this.state.countries.map( (country, i) => {
-            return <option key={i}>{country.Country}</option>
+        return this.state.countries.map( (country) => {
+            return <option>{country.Country}</option>
         });
     }
 
@@ -96,8 +95,8 @@ export default class Chartdata extends React.Component {
                 '#6ba9ff',
                 '#63ffb6',
                 '#FF6384'
-                ],
-            }]
+                ], 
+            }]   
         };
         return data;
     }
@@ -105,16 +104,14 @@ export default class Chartdata extends React.Component {
     // Create cleaner date for new cases
     getDate() {
         let date = this.state.date;
-        if( date === undefined) {
+        if( date === null) {
             return
         } else {
             let dateData = String(date)
-            if(dateData.length > 10 ) {
-            dateData = dateData.substring(0,10);   
-            dateData = dateData.split("-").reverse().join("-");
-        }
-            return dateData;  
-        }
+        let cleanDate = new Date(dateData).toDateString();
+        return cleanDate;  
+         
+    }
              
     }
 
@@ -156,7 +153,8 @@ export default class Chartdata extends React.Component {
 {/* Doughnut Chart Container */}
 
                 <div className="chartContainer">
-                    <h2>New Covid Cases From {this.getDate()}</h2>
+                    <h2>New Covid-19 Cases</h2>
+                    <h4>Last Update: {this.getDate()}</h4>
                     <Doughnut data={this.getGraphData()} />
                 </div>
             </div>
