@@ -3,6 +3,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: sans-serif;
 }
 
 body {
@@ -103,7 +104,84 @@ body {
 
 /* LIST DATA */
 
-.listDataContainer {
-  background-color: #DFE7F2;
-  height: 40vh;
+.listTitle {
+  color: #A4B3D3;
+  font-size: 35px;
+  padding: 30px 15px;
+  text-align: center;
+}
+
+.listContainer {
+  background-color: #F1F4F8;
+  color: black;
+}
+
+table {
+  width: 100%;
+  margin: 0 auto;
+  border-spacing: 0 0px;
+}
+
+.listLabels th {
+  background: #A4B3D3;
+  padding: 20px 12px;
+  text-align: left;
+}
+
+.listDetails {
+  background: #DFE7F2;
+}
+.listDetails:nth-child(even){
+  background-color: #F1F4F8;
+  padding: 30px 2px;
+}
+
+.listDetails td {
+  padding: 10px 12px;
+}
+
+/* MEDIA QUERIES */
+
+@media screen and (max-width: 1500px) {
+  .chartContainer {
+    height: 500px;
+    width: 700px;
+  }
+  .box {
+    height:150px;
+    width: 150px;
+  }
+  .boxDataNumber {
+    font-size: 20px;
+  }
+  .boxChartTitle {
+    font-size: 18px;
+  }
+}
+
+@media screen and (max-width: 1170px) {
+.chartDataContainer {
+  flex-wrap: wrap;
+}
+.chartContainer {
+  margin: 0 auto;
+  margin-top: 50px;
+  border-left: none;
+  border-top: solid aliceblue 1px;
+  padding-top: 30px; 
+}
+.chartDataContainer {
+  margin-top: 50px;
+}
+.chartDataContainerWhole {
+  padding-bottom: 0px;
+}
+}
+
+@media screen and (max-width: 700px) {
+  .chartContainer {
+    height: auto;
+    width: 100%;
+    padding-bottom: 50px;
+  }
 }
