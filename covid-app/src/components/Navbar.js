@@ -6,7 +6,7 @@ export default function Navbar() {
         <div className="navbar">
             <h2>
                 <FaGlobeAmericas className="navIcon" />
-                <span className="navTitle">Covid Tracker</span>
+                <span className="navTitle">Covid-19 Tracker</span>
             </h2>
         </div>
     )
